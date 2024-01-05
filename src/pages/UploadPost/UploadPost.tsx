@@ -30,8 +30,6 @@ const UploadPost = () => {
   })
   const [isUpload, setIsUpload] = useState(false)
 
-  // const navigate = useNavigate()
-
   const handleUpload = async () => {
     setIsUpload(true)
     const result = getFormValidationResult()

@@ -1,11 +1,15 @@
-import { AuthProvider } from '.'
+import { AuthProvider, GlobalProvider } from '.'
 
 type Props = {
   children: React.ReactNode
 }
 
 const AppState = ({ children }: Props) => {
-  return <AuthProvider>{children}</AuthProvider>
+  return (
+    <GlobalProvider>
+      <AuthProvider>{children}</AuthProvider>
+    </GlobalProvider>
+  )
 }
 
 export default AppState

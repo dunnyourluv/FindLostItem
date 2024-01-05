@@ -57,3 +57,5 @@ export type SinglePayload = HttpTypes.Payload<Instance>
 export type TopicsPayload = HttpTypes.Payload<Topic[]>
 
 export type TopicPayload = HttpTypes.Payload<Topic>
+
+export type CountPendingPayload = HttpTypes.Payload<{ count: number }>

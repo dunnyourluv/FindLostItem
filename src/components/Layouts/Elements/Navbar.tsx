@@ -17,13 +17,13 @@ import {
   PresentationChartBarIcon,
   UsersIcon,
 } from '@heroicons/react/24/outline'
-import { ComponentPropsWithoutRef, Fragment, useState } from 'react'
+import { ComponentPropsWithoutRef, Fragment, useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { twMerge } from 'tailwind-merge'
 import SearchInput from './SearchInput'
 import { User } from '@/components/User'
-import { useAuth } from '@/hooks'
-import { AuthApi } from '@/api'
+import { useAuth, useCountPendingPosts } from '@/hooks'
+import { AuthApi, PostApi } from '@/api'
 
 type Props = ComponentPropsWithoutRef<'nav'> & {}
 
@@ -83,7 +83,7 @@ const NavMenuItem = ({
 const Navbar = ({ className, ...props }: Props) => {
   const [showMenu, setShowMenu] = useState(false)
   const [showSearch, setShowSearch] = useState(false)
-
+  const [countPendingPosts, setCountPendingPosts] = useCountPendingPosts()
   const { user } = useAuth()
 
   const toggleMenu = () => {
@@ -99,17 +99,30 @@ const Navbar = ({ className, ...props }: Props) => {
     window.location.reload()
   }
 
+  useEffect(() => {
+    if (user?.isAdmin) {
+      PostApi.countPending().then((res) => {
+        if (res) {
+          setCountPendingPosts(res.count)
+        }
+      })
+    }
+  }, [user])
+
   return (
     <nav
       className={twMerge('h-[60px] bg-black flex items-center px-2', className)}
       {...props}
     >
       <div className="left flex items-center">
-        <Bars3Icon
-          className="text-white cursor-pointer"
-          height={26}
-          onClick={toggleMenu}
-        />
+        <div className="relative cursor-pointer" onClick={toggleMenu}>
+          <Bars3Icon className="text-white" height={26} />
+          {countPendingPosts > 0 && (
+            <span className="absolute -top-1 -right-1 h-4 w-4 text-sm text-center text-white bg-red-500 rounded-full">
+              {countPendingPosts}
+            </span>
+          )}
+        </div>
         <Link to="/" className="block ml-2">
           <img src={Images.LOGO} alt="logo" width={40} />
         </Link>
@@ -213,7 +226,12 @@ const Navbar = ({ className, ...props }: Props) => {
                       to="/manager-posts"
                       icon={<PresentationChartBarIcon height={24} />}
                     >
-                      Phê duyệt bài đăng
+                      Phê duyệt bài đăng{' '}
+                      {countPendingPosts > 0 && (
+                        <span className="bg-red-500 inline-block rounded-full h-5 w-5 text-center text-white">
+                          {countPendingPosts}
+                        </span>
+                      )}
                     </NavMenuItem>
                   )}
                   {user?.isAdmin && (

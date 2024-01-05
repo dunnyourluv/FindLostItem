@@ -19,3 +19,10 @@ export type Register = Pick<WithPassword, 'username' | 'email' | 'password'> & {
 }
 
 export type Payload = HttpTypes.Payload<Instance>
+
+export type Payloads = HttpTypes.Payload<Instance[]>
+
+export type Create = Omit<Instance, 'uuid' | 'avatar'> & {
+  avatar: File
+  password: string
+}

@@ -6,10 +6,12 @@ import { useEffect, useState } from 'react'
 import { ManagerCard } from './components'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
 import { Button } from '@/components/Elements'
+import { useCountPendingPosts } from '@/hooks'
 
 const ManagerPost = () => {
   const [posts, setPosts] = useState<PostTypes.Instance[]>([])
   const [loading, setLoading] = useState(false)
+  const [_, setCountPendingPosts] = useCountPendingPosts()
   const fetch = async () => {
     setLoading(true)
     try {
@@ -24,6 +26,10 @@ const ManagerPost = () => {
   useEffect(() => {
     fetch()
   }, [])
+
+  useEffect(() => {
+    setCountPendingPosts(posts.length)
+  }, [posts.length])
 
   const updateStatusPost = (post: PostTypes.Instance) => {
     setPosts((prev) => prev.filter((p) => p.uuid !== post.uuid))

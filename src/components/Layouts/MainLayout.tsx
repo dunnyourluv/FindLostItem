@@ -11,7 +11,7 @@ const MainLayout = ({ children, navbarEffect = 'fixed', ...props }: Props) => {
       <Header navbarEffect={navbarEffect} />
       <div className="mt-[60px]"></div>
       {children}
-      <div className="mb-10"></div>
+      <div className="pb-10 bg-gray-100"></div>
       <Footer />
     </div>
   )

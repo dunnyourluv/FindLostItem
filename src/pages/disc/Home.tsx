@@ -92,18 +92,20 @@ const Home = () => {
           </form>
         </div>
       </section>
-      {posts.length > 0 && (
-        <section className="pt-10 container">
-          <h2 className="text-2xl text-center mb-8 font-semibold">
-            Các bài đăng gần đây
-          </h2>
-          <Card.Grid>
-            {posts.map((post) => (
-              <Card key={post.uuid} info={post} />
-            ))}
-          </Card.Grid>
-        </section>
-      )}
+      <section className="bg-gray-100">
+        {posts.length > 0 && (
+          <div className="pt-10 container">
+            <h2 className="text-2xl text-center mb-8 font-semibold">
+              Các bài đăng gần đây
+            </h2>
+            <Card.Grid>
+              {posts.map((post) => (
+                <Card key={post.uuid} info={post} />
+              ))}
+            </Card.Grid>
+          </div>
+        )}
+      </section>
     </MainLayout>
   )
 }

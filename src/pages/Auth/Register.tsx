@@ -24,13 +24,16 @@ const Register = () => {
 
   return (
     <MainLayout>
-      <main className="container">
-        <div className="pt-10 max-w-lg mx-auto">
-          <h1 className="text-2xl font-semibold text-center">Register</h1>
-          <RegisterForm
-            onRegister={handleRegister}
-            error={authState.register.error || ''}
-          />
+      <main className="bg-gray-100">
+        <div className="container">
+          <div className="pt-10"></div>
+          <div className="p-4 bg-white rounded-md max-w-lg mx-auto">
+            <h1 className="text-2xl font-semibold text-center">Register</h1>
+            <RegisterForm
+              onRegister={handleRegister}
+              error={authState.register.error || ''}
+            />
+          </div>
         </div>
       </main>
     </MainLayout>

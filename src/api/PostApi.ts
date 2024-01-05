@@ -101,6 +101,17 @@ class PostApi {
       throw error.response.data
     }
   }
+
+  static async countPending() {
+    try {
+      const { data } = await api.get<PostTypes.CountPendingPayload>(
+        '/admin/posts/pending/count'
+      )
+      return data.data
+    } catch (error: any) {
+      throw error.response.data
+    }
+  }
 }
 
 export default PostApi

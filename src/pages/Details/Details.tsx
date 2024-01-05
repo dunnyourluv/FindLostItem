@@ -78,7 +78,7 @@ const Details = () => {
               message: 'Đã xoá bài viết thành công',
               cancelText: 'Trở về',
               onClose: () => {
-                navigate('/profiles')
+                navigate('/profile')
               },
             })
           } catch (error) {

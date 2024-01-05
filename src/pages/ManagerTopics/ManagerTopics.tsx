@@ -6,10 +6,12 @@ import { Fragment, useEffect, useState } from 'react'
 import { AddTopicForm } from './components'
 import { PostTypes } from '@/types'
 import { TopicApi } from '@/api'
+import { useGlobalNotification } from '@/hooks'
 
 const ManagerTopics = () => {
   const [showForm, setShowForm] = useState(false)
   const [topics, setTopics] = useState<PostTypes.Topic[]>([])
+  const { showNotification, hiddenNotification } = useGlobalNotification()
   const fetchTopics = async () => {
     try {
       const topics = await TopicApi.gets()
@@ -40,13 +42,23 @@ const ManagerTopics = () => {
     }
   }
 
-  const handleDeleteTopic = async (topicId: string) => {
-    try {
-      await TopicApi.remove(topicId)
-      await fetchTopics()
-    } catch (error) {
-      console.log(error)
-    }
+  const handleDeleteTopic = (topicId: string) => {
+    showNotification({
+      title: 'Xoá chủ đề',
+      message: 'Bạn có chắc muốn xoá chủ đề này?',
+      isConfirm: true,
+      onConfirm: async () => {
+        try {
+          await TopicApi.remove(topicId)
+          await fetchTopics()
+        } catch (error) {
+          console.log(error)
+        } finally {
+          hiddenNotification()
+        }
+      },
+      confirmText: 'Xoá',
+    })
   }
 
   return (
@@ -62,35 +74,38 @@ const ManagerTopics = () => {
                 Thêm chủ đề
               </Button>
             </div>
-            <Table>
-              <Table.Head>
-                <Table.Row className="border-b border-gray-200">
-                  <Table.HeadCell>ID</Table.HeadCell>
-                  <Table.HeadCell>Tên chủ đề</Table.HeadCell>
-                  <Table.HeadCell></Table.HeadCell>
-                </Table.Row>
-              </Table.Head>
-              <Table.Body>
-                {topics.map((topic) => (
-                  <Table.Row
-                    className="border-b border-gray-200"
-                    key={topic.uuid}
-                  >
-                    <Table.Cell>{topic.uuid}</Table.Cell>
-                    <Table.Cell>{topic.name}</Table.Cell>
-                    <Table.Cell>
-                      <Button
-                        size="sm"
-                        className="bg-red-500"
-                        onClick={() => handleDeleteTopic(topic.uuid)}
-                      >
-                        Xoá
-                      </Button>
-                    </Table.Cell>
+            <div className="bg-white py-4 rounded-md">
+              <Table>
+                <Table.Head>
+                  <Table.Row className="border-b border-gray-200">
+                    <Table.HeadCell>ID</Table.HeadCell>
+                    <Table.HeadCell>Tên chủ đề</Table.HeadCell>
+                    <Table.HeadCell></Table.HeadCell>
                   </Table.Row>
-                ))}
-              </Table.Body>
-            </Table>
+                </Table.Head>
+                <Table.Body>
+                  {topics.map((topic) => (
+                    <Table.Row
+                      className="border-b border-gray-200"
+                      key={topic.uuid}
+                    >
+                      <Table.Cell>{topic.uuid}</Table.Cell>
+                      <Table.Cell>{topic.name}</Table.Cell>
+                      <Table.Cell>
+                        <Button
+                          size="sm"
+                          color="reverse"
+                          className="hover:bg-red-500 hover:text-white text-red-500"
+                          onClick={() => handleDeleteTopic(topic.uuid)}
+                        >
+                          Xoá
+                        </Button>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table>
+            </div>
           </div>
         </main>
         <Transition as={Fragment} show={showForm}>
